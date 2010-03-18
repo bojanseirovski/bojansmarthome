@@ -694,8 +694,9 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     }//GEN-LAST:event_getInfoActionPerformed
 
     private void getTemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getTemperatureActionPerformed
-                try {// kod za temperatura 88
+       try {// kod za temperatura 88
             measure=1;
+            getTempVar=true;
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -717,8 +718,9 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     }//GEN-LAST:event_getTemperatureActionPerformed
 
     private void getHumidityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getHumidityActionPerformed
-                      try {// kod za vlaznost 250
+      try {// kod za vlaznost 250
             measure=1;
+            getHumidityVar=true;
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -740,7 +742,8 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     }//GEN-LAST:event_getHumidityActionPerformed
 
     private void getPumpStatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getPumpStatsActionPerformed
-                           try {// kod za pupma 202
+       try {// kod za pupma 202
+            getPumpStatusVar=true;
             measure=1;
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
