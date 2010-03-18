@@ -283,6 +283,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
 
         getTemperature.setText(resourceMap.getString("Get Temperature.text")); // NOI18N
         getTemperature.setName("Get Temperature"); // NOI18N
+        getTemperature.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getTemperatureActionPerformed(evt);
+            }
+        });
 
         getHumidity.setText(resourceMap.getString("getHumidity.text")); // NOI18N
         getHumidity.setName("getHumidity"); // NOI18N
@@ -677,6 +682,43 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getInfoActionPerformed
+
+    private void getTemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getTemperatureActionPerformed
+                try {//**
+            measure=1;
+            if (in) {//ako e odbereno in
+                serialPort.setDTR(true);
+                System.out.println("DTR on");
+                outputStream = serialPort.getOutputStream();
+                outputStream.write(devAddress);
+                System.out.println("write DevAddress to port");
+                Thread.sleep(500);
+                outputStream.write((byte) 85 & 0xff);
+                serialPort.setDTR(false);
+                System.out.println("DTR off");
+                Thread.sleep(100);
+                inputStream = serialPort.getInputStream();
+            }
+            if (out) {//ako e odbereno out
+                serialPort.setDTR(true);
+                System.out.println("DTR on");
+                outputStream = serialPort.getOutputStream();
+                outputStream.write(devAddress);
+                System.out.println("write DevAddress to port");
+                Thread.sleep(500);
+                outputStream.write(85 & 0xff);
+                serialPort.setDTR(false);
+                System.out.println("DTR off");
+                Thread.sleep(100);
+                inputStream = serialPort.getInputStream();
+            }
+            outputStream.close();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SmartHomeView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+        }//**
+    }//GEN-LAST:event_getTemperatureActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel flowlabel;
