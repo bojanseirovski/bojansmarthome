@@ -299,6 +299,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
 
         getPumpStats.setText(resourceMap.getString("getPumpStats.text")); // NOI18N
         getPumpStats.setName("getPumpStats"); // NOI18N
+        getPumpStats.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getPumpStatsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -691,19 +696,6 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     private void getTemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getTemperatureActionPerformed
                 try {// kod za temperatura 88
             measure=1;
-            if (in) {//ako e odbereno in
-                serialPort.setDTR(true);
-                System.out.println("DTR on");
-                outputStream = serialPort.getOutputStream();
-                outputStream.write(devAddress);
-                System.out.println("write DevAddress to port");
-                Thread.sleep(500);
-                outputStream.write((byte) 85 & 0xff);
-                serialPort.setDTR(false);
-                System.out.println("DTR off");
-                Thread.sleep(100);
-                inputStream = serialPort.getInputStream();
-            }
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -711,7 +703,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                 outputStream.write(devAddress);
                 System.out.println("write DevAddress to port");
                 Thread.sleep(500);
-                outputStream.write(85 & 0xff);
+                outputStream.write(88 & 0xff);
                 serialPort.setDTR(false);
                 System.out.println("DTR off");
                 Thread.sleep(100);
@@ -725,21 +717,8 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     }//GEN-LAST:event_getTemperatureActionPerformed
 
     private void getHumidityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getHumidityActionPerformed
-                      try {//**
+                      try {// kod za vlaznost 250
             measure=1;
-            if (in) {//ako e odbereno in
-                serialPort.setDTR(true);
-                System.out.println("DTR on");
-                outputStream = serialPort.getOutputStream();
-                outputStream.write(devAddress);
-                System.out.println("write DevAddress to port");
-                Thread.sleep(500);
-                outputStream.write((byte) 85 & 0xff);
-                serialPort.setDTR(false);
-                System.out.println("DTR off");
-                Thread.sleep(100);
-                inputStream = serialPort.getInputStream();
-            }
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -747,7 +726,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                 outputStream.write(devAddress);
                 System.out.println("write DevAddress to port");
                 Thread.sleep(500);
-                outputStream.write(85 & 0xff);
+                outputStream.write(250 & 0xff);
                 serialPort.setDTR(false);
                 System.out.println("DTR off");
                 Thread.sleep(100);
@@ -759,6 +738,29 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getHumidityActionPerformed
+
+    private void getPumpStatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getPumpStatsActionPerformed
+                           try {// kod za pupma 202
+            measure=1;
+            if (out) {//ako e odbereno out
+                serialPort.setDTR(true);
+                System.out.println("DTR on");
+                outputStream = serialPort.getOutputStream();
+                outputStream.write(devAddress);
+                System.out.println("write DevAddress to port");
+                Thread.sleep(500);
+                outputStream.write(202 & 0xff);
+                serialPort.setDTR(false);
+                System.out.println("DTR off");
+                Thread.sleep(100);
+                inputStream = serialPort.getInputStream();
+            }
+            outputStream.close();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SmartHomeView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+        }//**
+    }//GEN-LAST:event_getPumpStatsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
