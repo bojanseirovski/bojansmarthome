@@ -35,7 +35,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     LittleEndian konv;
     String readT = "";
     int measure = 1;
-    boolean out = true, in = false;
+    boolean out = true, in = false,getTempVar=false,getHumidityVar=false, getPumpStatusVar=false;
     int devAddress;
     short a = 0;
     boolean[] stateOfLight = new boolean[6];
@@ -291,6 +291,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
 
         getHumidity.setText(resourceMap.getString("getHumidity.text")); // NOI18N
         getHumidity.setName("getHumidity"); // NOI18N
+        getHumidity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getHumidityActionPerformed(evt);
+            }
+        });
 
         getPumpStats.setText(resourceMap.getString("getPumpStats.text")); // NOI18N
         getPumpStats.setName("getPumpStats"); // NOI18N
@@ -684,7 +689,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     }//GEN-LAST:event_getInfoActionPerformed
 
     private void getTemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getTemperatureActionPerformed
-                try {//**
+                try {// kod za temperatura 88
             measure=1;
             if (in) {//ako e odbereno in
                 serialPort.setDTR(true);
@@ -718,6 +723,42 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getTemperatureActionPerformed
+
+    private void getHumidityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getHumidityActionPerformed
+                      try {//**
+            measure=1;
+            if (in) {//ako e odbereno in
+                serialPort.setDTR(true);
+                System.out.println("DTR on");
+                outputStream = serialPort.getOutputStream();
+                outputStream.write(devAddress);
+                System.out.println("write DevAddress to port");
+                Thread.sleep(500);
+                outputStream.write((byte) 85 & 0xff);
+                serialPort.setDTR(false);
+                System.out.println("DTR off");
+                Thread.sleep(100);
+                inputStream = serialPort.getInputStream();
+            }
+            if (out) {//ako e odbereno out
+                serialPort.setDTR(true);
+                System.out.println("DTR on");
+                outputStream = serialPort.getOutputStream();
+                outputStream.write(devAddress);
+                System.out.println("write DevAddress to port");
+                Thread.sleep(500);
+                outputStream.write(85 & 0xff);
+                serialPort.setDTR(false);
+                System.out.println("DTR off");
+                Thread.sleep(100);
+                inputStream = serialPort.getInputStream();
+            }
+            outputStream.close();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SmartHomeView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+        }//**
+    }//GEN-LAST:event_getHumidityActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
