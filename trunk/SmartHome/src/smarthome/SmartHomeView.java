@@ -112,6 +112,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         lightbox5.setEnabled(false);
         lightbox6.setEnabled(false);
         sendComm.setEnabled(false);
+        getFlow.setEnabled(false);
+        getHumidity.setEnabled(false);
+        getInfo.setEnabled(false);
+        getPumpStats.setEnabled(false);
+        getTemperature.setEnabled(false);
 
     }
 
@@ -522,7 +527,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         if (startComm.getText().equals("Start acquiring data")) {
             selectInOut.setEnabled(true);
             startComm.setText("Stop");
-            sendComm.setEnabled(true);
+            //sendComm.setEnabled(true);
             boolean portFound = false;
             String defaultPort = "COM1";
             portList = CommPortIdentifier.getPortIdentifiers();
@@ -573,6 +578,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
             lightbox4.setEnabled(false);
             lightbox5.setEnabled(false);
             lightbox6.setEnabled(false);
+            getFlow.setEnabled(false);
+            getHumidity.setEnabled(false);
+            getInfo.setEnabled(false);
+            getPumpStats.setEnabled(false);
+            getTemperature.setEnabled(false);
             serialPort.close();
 
         }
@@ -599,6 +609,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
             lightbox5.setEnabled(true);
             lightbox6.setEnabled(true);
             sendComm.setEnabled(true);
+            getFlow.setEnabled(false);
+            getHumidity.setEnabled(false);
+            getInfo.setEnabled(false);
+            getPumpStats.setEnabled(false);
+            getTemperature.setEnabled(false);
         } else if (selectInOut.getSelectedIndex() == 2) {
             System.out.println("out");
             in = false;
@@ -612,7 +627,14 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
             lightbox5.setEnabled(false);
             lightbox6.setEnabled(false);
             sendComm.setEnabled(true);
+            getFlow.setEnabled(true);
+            getHumidity.setEnabled(true);
+            getInfo.setEnabled(true);
+            getPumpStats.setEnabled(true);
+            getTemperature.setEnabled(true);
         } else if (selectInOut.getSelectedIndex() == 0) {
+            in = false;
+            out = false;
             System.out.println("Select an option");
             pumpChkBox.setEnabled(false);
             lightbox1.setEnabled(false);
@@ -622,6 +644,11 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
             lightbox5.setEnabled(false);
             lightbox6.setEnabled(false);
             sendComm.setEnabled(false);
+            getFlow.setEnabled(false);
+            getHumidity.setEnabled(false);
+            getInfo.setEnabled(false);
+            getPumpStats.setEnabled(false);
+            getTemperature.setEnabled(false);
         }
 
     }//GEN-LAST:event_selectInOutActionPerformed
@@ -886,36 +913,20 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                     int numBytes = 0;
                     while (inputStream.available() > 0) {
                         numBytes = inputStream.read(readBuffer);
-                        if (measure1 == 0) {
-                            t = konv.getInt(readBuffer);
-                            break;
-                        }
-                        if (measure1 == 1) {
-                            h = konv.getInt(readBuffer);
-                            break;
-                        }
-                        if (measure1 == 2) {
-                            f = konv.getInt(readBuffer);
-                            break;
-                        }
-                        if (measure1 == 3) {
-                            ps = konv.getInt(readBuffer);
-                            break;
-                        }
-                        measure1++;
+
                     }
 
                     if (out) {//4 byte , pump, hum. ,temp, flow
                         if (getTempVar) {
-                            templabel.setText(" " + tempConv(t) + " Deg. Celsius");
+                            templabel.setText(" " + tempConv(konv.getInt(readBuffer)) + " Deg. Celsius");
                             getTempVar = false;
                         }
                         if (getHumidityVar) {
-                            humidilabel.setText(" " + humidityConvert(h << 2) + " %");
+                            humidilabel.setText(" " + humidityConvert(konv.getInt(readBuffer) << 2) + " %");
                             getHumidityVar = false;
                         }
                         if (getFlowVar) {
-                            flowlabel.setText(" " + flowConvert(f << 2) + " l/m");
+                            flowlabel.setText(" " + flowConvert(konv.getInt(readBuffer) << 2) + " l/m");
                             getFlowVar = false;
                         }
                         if (getPumpStatusVar) {
