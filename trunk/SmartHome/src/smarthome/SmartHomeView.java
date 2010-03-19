@@ -812,10 +812,10 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     }//GEN-LAST:event_getPumpStatsActionPerformed
     /**
      * za da se prevzeme protokot
-     * kodot e 77
+     * kodot e 154
      */
     private void getFlowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getFlowActionPerformed
-        try {// kod za pupma 77
+        try {// kod za pupma 154
             getFlowVar = true;
             measure = 1;
             if (out) {//ako e odbereno out
@@ -825,7 +825,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                 outputStream.write(devAddress);
                 System.out.println("write DevAddress to port");
                 Thread.sleep(500);
-                outputStream.write(77 & 0xff);
+                outputStream.write(154 & 0xff);
                 serialPort.setDTR(false);
                 System.out.println("DTR off");
                 Thread.sleep(100);
