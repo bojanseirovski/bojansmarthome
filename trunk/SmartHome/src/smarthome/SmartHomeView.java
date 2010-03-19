@@ -35,7 +35,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     LittleEndian konv;
     String readT = "";
     int measure = 1;
-    boolean out = true, in = false, getTempVar = false, getHumidityVar = false, getPumpStatusVar = false, getFlowVar=false;
+    boolean out = true, in = false, getTempVar = false, getHumidityVar = false, getPumpStatusVar = false, getFlowVar = false;
     int devAddress;
     short a = 0;
     boolean[] stateOfLight = new boolean[6];
@@ -757,7 +757,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         }//**
     }//GEN-LAST:event_getHumidityActionPerformed
     /**
-     * za da se prevzeme vlaznost
+     * za da se prevzeme status na pumpa - on/off
      * kodot e 202
      */
     private void getPumpStatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getPumpStatsActionPerformed
@@ -783,12 +783,12 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getPumpStatsActionPerformed
-/**
- * za da se prevzeme protokot
- * kodot e 77
- */
+    /**
+     * za da se prevzeme protokot
+     * kodot e 77
+     */
     private void getFlowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getFlowActionPerformed
-      try {// kod za pupma 77
+        try {// kod za pupma 77
             getFlowVar = true;
             measure = 1;
             if (out) {//ako e odbereno out
@@ -810,7 +810,6 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getFlowActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel flowlabel;
@@ -909,25 +908,23 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                     if (out) {//4 byte , pump, hum. ,temp, flow
                         if (getTempVar) {
                             templabel.setText(" " + tempConv(t) + " Deg. Celsius");
-                            getTempVar=false;
+                            getTempVar = false;
                         }
-                        if(getHumidityVar){
-                        humidilabel.setText(" " + humidityConvert(h << 2) + " %");
-                        getHumidityVar=false;
+                        if (getHumidityVar) {
+                            humidilabel.setText(" " + humidityConvert(h << 2) + " %");
+                            getHumidityVar = false;
                         }
-                        if(getFlowVar){
-                        flowlabel.setText(" " + flowConvert(f << 2) + " l/m");
-                        getFlowVar=false;
+                        if (getFlowVar) {
+                            flowlabel.setText(" " + flowConvert(f << 2) + " l/m");
+                            getFlowVar = false;
                         }
-
-
-
-                        if (ps == 1) {
-                            pumpChkBox.setSelected(true);
-                            System.out.println(" PS" + ps);
+                        if (getPumpStatusVar) {
+                            ps = konv.getInt(readBuffer);
+                            if (ps == 1) {
+                                pumpChkBox.setSelected(true);
+                                System.out.println(" PS" + ps);
+                            }
                         }
-                        measure++;
-
                     }
                     if (in) {
                         t = konv.getUShort(readBuffer);
