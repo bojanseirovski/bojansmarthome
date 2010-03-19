@@ -35,7 +35,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     LittleEndian konv;
     String readT = "";
     int measure = 1;
-    boolean out = true, in = false,getTempVar=false,getHumidityVar=false, getPumpStatusVar=false;
+    boolean out = true, in = false, getTempVar = false, getHumidityVar = false, getPumpStatusVar = false, getFlowVar=false;
     int devAddress;
     short a = 0;
     boolean[] stateOfLight = new boolean[6];
@@ -161,6 +161,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         getTemperature = new javax.swing.JButton();
         getHumidity = new javax.swing.JButton();
         getPumpStats = new javax.swing.JButton();
+        getFlow = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -305,6 +306,14 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
             }
         });
 
+        getFlow.setText(resourceMap.getString("getFlow.text")); // NOI18N
+        getFlow.setName("getFlow"); // NOI18N
+        getFlow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getFlowActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -369,12 +378,12 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
-                                        .addGap(2, 2, 2)
-                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(getPumpStats)
-                                            .addComponent(getInfo)))
+                                        .addGap(42, 42, 42)
+                                        .addComponent(getInfo))
                                     .addComponent(getTemperature)
-                                    .addComponent(getHumidity))
+                                    .addComponent(getHumidity)
+                                    .addComponent(getPumpStats)
+                                    .addComponent(getFlow))
                                 .addContainerGap())))))
         );
         mainPanelLayout.setVerticalGroup(
@@ -417,26 +426,28 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lightlab6)
-                            .addComponent(lightbox6))
-                        .addGap(113, 113, 113)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11)
-                            .addComponent(sendComm))
-                        .addGap(9, 9, 9)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(selectInOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(startComm)))
+                            .addComponent(lightbox6)))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addComponent(getInfo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(getTemperature)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(getHumidity)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(getPumpStats)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                        .addComponent(getHumidity)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(getFlow)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(getPumpStats)
+                .addGap(27, 27, 27)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(sendComm))
+                .addGap(9, 9, 9)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectInOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(startComm))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         getInfo.getAccessibleContext().setAccessibleName(resourceMap.getString("getInfo.AccessibleContext.accessibleName")); // NOI18N
@@ -659,7 +670,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
 
     private void getInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getInfoActionPerformed
         try {//**
-            measure=1;
+            measure = 1;
             if (in) {//ako e odbereno in
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -692,11 +703,14 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getInfoActionPerformed
-
+    /**
+     * za temperatura da se prevezeme
+     * kodot e 88
+     */
     private void getTemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getTemperatureActionPerformed
-       try {// kod za temperatura 88
-            measure=1;
-            getTempVar=true;
+        try {// kod za temperatura 88
+            measure = 1;
+            getTempVar = true;
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -716,11 +730,14 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getTemperatureActionPerformed
-
+    /**
+     * za vlaznost da prevzeme
+     * kodot e 250
+     */
     private void getHumidityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getHumidityActionPerformed
-      try {// kod za vlaznost 250
-            measure=1;
-            getHumidityVar=true;
+        try {// kod za vlaznost 250
+            measure = 1;
+            getHumidityVar = true;
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -740,11 +757,14 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getHumidityActionPerformed
-
+    /**
+     * za da se prevzeme vlaznost
+     * kodot e 202
+     */
     private void getPumpStatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getPumpStatsActionPerformed
-       try {// kod za pupma 202
-            getPumpStatusVar=true;
-            measure=1;
+        try {// kod za pupma 202
+            getPumpStatusVar = true;
+            measure = 1;
             if (out) {//ako e odbereno out
                 serialPort.setDTR(true);
                 System.out.println("DTR on");
@@ -764,10 +784,38 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
         } catch (IOException e) {
         }//**
     }//GEN-LAST:event_getPumpStatsActionPerformed
+/**
+ * za da se prevzeme protokot
+ * kodot e 77
+ */
+    private void getFlowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getFlowActionPerformed
+      try {// kod za pupma 77
+            getFlowVar = true;
+            measure = 1;
+            if (out) {//ako e odbereno out
+                serialPort.setDTR(true);
+                System.out.println("DTR on");
+                outputStream = serialPort.getOutputStream();
+                outputStream.write(devAddress);
+                System.out.println("write DevAddress to port");
+                Thread.sleep(500);
+                outputStream.write(77 & 0xff);
+                serialPort.setDTR(false);
+                System.out.println("DTR off");
+                Thread.sleep(100);
+                inputStream = serialPort.getInputStream();
+            }
+            outputStream.close();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SmartHomeView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+        }//**
+    }//GEN-LAST:event_getFlowActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel flowlabel;
+    private javax.swing.JButton getFlow;
     private javax.swing.JButton getHumidity;
     private javax.swing.JButton getInfo;
     private javax.swing.JButton getPumpStats;
@@ -809,7 +857,7 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
 
     @SuppressWarnings("static-access")
     public void serialEvent(SerialPortEvent event) {
-        
+
         Date dat = new Date();
         switch (event.getEventType()) {
 
@@ -841,58 +889,46 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
                     while (inputStream.available() > 0) {
                         numBytes = inputStream.read(readBuffer);
                         if (measure1 == 0) {
-                            t = konv.getInt(readBuffer);break;
+                            t = konv.getInt(readBuffer);
+                            break;
                         }
                         if (measure1 == 1) {
-                            h = konv.getInt(readBuffer);break;
+                            h = konv.getInt(readBuffer);
+                            break;
                         }
                         if (measure1 == 2) {
-                            f = konv.getInt(readBuffer);break;
+                            f = konv.getInt(readBuffer);
+                            break;
                         }
                         if (measure1 == 3) {
-                            ps = konv.getInt(readBuffer);break;
+                            ps = konv.getInt(readBuffer);
+                            break;
                         }
                         measure1++;
                     }
-                     
+
                     if (out) {//4 byte , pump, hum. ,temp, flow
-                       
-                        switch (measure) {
-                            case 1: {
-
-                                templabel.setText(" " + tempConv(t) + " Deg. Celsius");
-                                measure++;
-
-                                break;
-                            }
-                            case 2: {
-
-                                humidilabel.setText(" " + humidityConvert(h << 2) + " %");
-                                measure++;
-
-                                break;
-                            }
-                            case 3: {
-
-                                flowlabel.setText(" " + flowConvert(f << 2) + " l/m");
-                                measure++;
-
-                                break;
-                            }
-                            case 4: {
-
-                                if (ps == 1) {
-                                    pumpChkBox.setSelected(true);
-                                    System.out.println(" PS"+ps);
-                                }
-                                measure++;
-
-                                break;
-                            }
-//                            default:
-//                                measure = 1;
-//                                break;
+                        if (getTempVar) {
+                            templabel.setText(" " + tempConv(t) + " Deg. Celsius");
+                            getTempVar=false;
                         }
+                        if(getHumidityVar){
+                        humidilabel.setText(" " + humidityConvert(h << 2) + " %");
+                        getHumidityVar=false;
+                        }
+                        if(getFlowVar){
+                        flowlabel.setText(" " + flowConvert(f << 2) + " l/m");
+                        getFlowVar=false;
+                        }
+
+
+
+                        if (ps == 1) {
+                            pumpChkBox.setSelected(true);
+                            System.out.println(" PS" + ps);
+                        }
+                        measure++;
+
                     }
                     if (in) {
                         t = konv.getUShort(readBuffer);
@@ -962,9 +998,10 @@ public class SmartHomeView extends FrameView implements SerialPortEventListener,
     public int tempConv(int x) {
         float j = 0, i = 0;
         j = x >> 7;
-        i = (float) ((x>>1) * 0.48);
-        if (j == 1)
+        i = (float) ((x >> 1) * 0.48);
+        if (j == 1) {
             i = i * (-1);
+        }
         System.out.println("\n Temperature , x:" + x + "  j:" + j + "  i:" + i);
         return (int) i;
     }
